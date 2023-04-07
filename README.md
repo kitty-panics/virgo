@@ -1,29 +1,42 @@
-virgo
-=====
-Virtual Desktop Manager for Windows
+# VirGO
 
-[Download here](https://github.com/papplampe/virgo/releases/download/v.1.4.2/virgo.zip)
+Virtual Desktop Manager for Windows.
 
-Features:
-- resource friendly, exe is <10kb on disk and uses <1mb memory while running
-- 9 virtual desktops (more if you change a constant and recompile the code)
+## Features
 
-Hotkeys:
+- Resource friendly, exe is lss 10kb on disk and uses lss 1mb memory while running.
+- 9 virtual desktops (more if you change a constant and recompile the code).
 
-        Alt + Ctrl +  1..9     -> changes to desktop 1..9
-        Alt + Shift + 1..9     -> moves active window to desktop 1..9
-        ALT + CTRL + SHIFT + Q -> exits the program
-        ALT + CTRL + SHIFT + S -> starts/stops handling of other hotkeys
-        ALT + CTRL + SHIFT + P -> pin active window (makes it always visible)
+## Install
 
-the nerds can build it with
+[Download here].
 
-        git clone https://github.com/papplampe/virgo.git
-        cd virgo
-        make
+[Download here]: https://github.com/kitty-panics/virgo/releases
 
-If you do not have gcc/make installed you can change that doing following
+## Usage
 
-1. go to http://msys2.github.io/ and install it according to the instructions there
-2. open msys2 shell and install mingw-w64-i686-gcc and mingw-w64-i686-make using pacman
-3. duplicate C:\msys32\mingw32\bin\mingw32-make.exe and name it make.exe
+| Keyboard shortcuts       | Describe                                    |
+|:-------------------------|:--------------------------------------------|
+| `Alt + Ctrl  + 1…9`      | Changes to desktop 1…9                      |
+| `Alt + Shift + 1…9`      | Moves active window to desktop 1…9          |
+| `Alt + Ctrl + Shift + q` | Exits the program                           |
+| `Alt + Ctrl + Shift + s` | Starts/Stops handling of other hotkeys      |
+| `Alt + Ctrl + Shift + p` | Pin active window (makes it always visible) |
+
+## Build
+
+The nerds can build it with:
+
+1. `git clone https://github.com/kitty-panics/virgo`
+2. `cd virgo`
+3. `make`
+
+If you do not have [gcc]/[make] installed you can change that doing following:
+
+1. Go to ***https://www.msys2.org/*** and install it according to the instructions there.
+2. Open **MSYS2** shell and install `mingw-w64-i686-gcc` and `mingw-w64-i686-make` using **pacman**.
+3. Duplicate ***msys32\mingw32\bin\mingw32-make.exe*** and name it ***make.exe***.
+4. Open **MinGW32** shell and perform `make` operation.
+
+[gcc]: https://www.gnu.org/software/gcc/
+[make]: https://www.gnu.org/software/make/
