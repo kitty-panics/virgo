@@ -41,6 +41,7 @@ typedef struct {
 	Windows desktops[NUM_DESKTOPS];
 	Trayicon trayicon;
 	HWND pinned[NUM_PINNED];
+	HWND focused[NUM_DESKTOPS];
 } Virgo;
 
 static void *stb__sbgrowf(void *arr, unsigned increment, unsigned itemsize)
@@ -339,8 +340,10 @@ static void virgo_go_to_desk(Virgo *v, unsigned desk)
 		return;
 	}
 	virgo_update(v);
+	v->focused[v->current] = GetForegroundWindow();
 	windows_hide(&v->desktops[v->current]);
 	windows_show(&v->desktops[desk]);
+	SetForegroundWindow(v->focused[desk]);
 	v->current = desk;
 	trayicon_set(&v->trayicon, v->current + 1);
 }
