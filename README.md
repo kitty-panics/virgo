@@ -7,7 +7,6 @@ Virtual Desktop Manager for Windows
 Features:
 - resource friendly, exe is <10kb on disk and uses <1mb memory while running
 - 9 virtual desktops (more if you change a constant and recompile the code)
-- shows only a tray icon with the number of the desktop you are on
 
 Hotkeys:
 

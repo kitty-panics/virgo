@@ -27,19 +27,9 @@ typedef struct {
 } Windows;
 
 typedef struct {
-	NOTIFYICONDATA nid;
-	HBITMAP hBitmap;
-	HFONT hFont;
-	HWND hwnd;
-	HDC mdc;
-	unsigned bitmapWidth;
-} Trayicon;
-
-typedef struct {
 	unsigned current;
 	unsigned handle_hotkeys;
 	Windows desktops[NUM_DESKTOPS];
-	Trayicon trayicon;
 	HWND pinned[NUM_PINNED];
 	HWND focused[NUM_DESKTOPS];
 } Virgo;
@@ -66,67 +56,6 @@ static void *stb__sbgrowf(void *arr, unsigned increment, unsigned itemsize)
 		ExitProcess(1);
 		return (void *)(2 * sizeof(unsigned));
 	}
-}
-
-static HICON trayicon_draw(Trayicon *t, char *text, unsigned len)
-{
-	ICONINFO iconInfo;
-	HBITMAP hOldBitmap;
-	HFONT hOldFont;
-	hOldBitmap = (HBITMAP)SelectObject(t->mdc, t->hBitmap);
-	hOldFont = (HFONT)SelectObject(t->mdc, t->hFont);
-	TextOut(t->mdc, t->bitmapWidth / 4, 0, text, len);
-	SelectObject(t->mdc, hOldBitmap);
-	SelectObject(t->mdc, hOldFont);
-	iconInfo.fIcon = TRUE;
-	iconInfo.xHotspot = iconInfo.yHotspot = 0;
-	iconInfo.hbmMask = iconInfo.hbmColor = t->hBitmap;
-	return CreateIconIndirect(&iconInfo);
-}
-
-static void trayicon_init(Trayicon *t)
-{
-	HDC hdc;
-	t->hwnd =
-		CreateWindowA("STATIC", "virgo", 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
-	t->bitmapWidth = GetSystemMetrics(SM_CXSMICON);
-	t->nid.cbSize = sizeof(t->nid);
-	t->nid.hWnd = t->hwnd;
-	t->nid.uID = 100;
-	t->nid.uFlags = NIF_ICON;
-	hdc = GetDC(t->hwnd);
-	t->hBitmap = CreateCompatibleBitmap(hdc, t->bitmapWidth, t->bitmapWidth);
-	t->mdc = CreateCompatibleDC(hdc);
-	ReleaseDC(t->hwnd, hdc);
-	SetBkColor(t->mdc, RGB(0x00, 0x00, 0x00));
-	SetTextColor(t->mdc, RGB(0x00, 0xFF, 0x00));
-	t->hFont = CreateFont(-MulDiv(11, GetDeviceCaps(t->mdc, LOGPIXELSY), 72), 0,
-						  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Arial"));
-	t->nid.hIcon = trayicon_draw(t, "1", 1);
-	Shell_NotifyIcon(NIM_ADD, &t->nid);
-}
-
-static void trayicon_set(Trayicon *t, unsigned number)
-{
-	char snumber[2];
-	if (number > 9) {
-		return;
-	}
-	snumber[0] = number + '0';
-	snumber[1] = 0;
-	DestroyIcon(t->nid.hIcon);
-	t->nid.hIcon = trayicon_draw(t, snumber, 1);
-	Shell_NotifyIcon(NIM_MODIFY, &t->nid);
-}
-
-static void trayicon_deinit(Trayicon *t)
-{
-	Shell_NotifyIcon(NIM_DELETE, &t->nid);
-	DestroyIcon(t->nid.hIcon);
-	DeleteObject(t->hBitmap);
-	DeleteObject(t->hFont);
-	DeleteDC(t->mdc);
-	DestroyWindow(t->hwnd);
 }
 
 static void windows_mod(Windows *wins, unsigned state)
@@ -303,7 +232,6 @@ static void virgo_init(Virgo *v)
 					'S');
 	register_hotkey(i * 2 + 2, MOD_ALT | MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT,
 					'P');
-	trayicon_init(&v->trayicon);
 }
 
 static void virgo_deinit(Virgo *v)
@@ -313,7 +241,6 @@ static void virgo_deinit(Virgo *v)
 		windows_show(&v->desktops[i]);
 		sb_free(v->desktops[i].windows);
 	}
-	trayicon_deinit(&v->trayicon);
 }
 
 static void virgo_move_to_desk(Virgo *v, unsigned desk)
@@ -346,7 +273,6 @@ static void virgo_go_to_desk(Virgo *v, unsigned desk)
 	windows_show(&v->desktops[desk]);
 	SetForegroundWindow(v->focused[desk]);
 	v->current = desk;
-	trayicon_set(&v->trayicon, v->current + 1);
 }
 
 void __main(void) __asm__("__main");
