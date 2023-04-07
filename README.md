@@ -6,13 +6,13 @@ Virtual Desktop Manager for Windows
 
 Features:
 - resource friendly, exe is <10kb on disk and uses <1mb memory while running
-- 4 virtual desktops (more if you change a constant and recompile the code)
+- 9 virtual desktops (more if you change a constant and recompile the code)
 - shows only a tray icon with the number of the desktop you are on
 
 Hotkeys:
 
-        ALT + 1..4             -> changes to desktop 1..4
-        CTRL + 1..4            -> moves active window to desktop 1..4
+        Alt + Ctrl +  1..9     -> changes to desktop 1..9
+        Alt + Shift + 1..9     -> moves active window to desktop 1..9
         ALT + CTRL + SHIFT + Q -> exits the program
         ALT + CTRL + SHIFT + S -> starts/stops handling of other hotkeys
         ALT + CTRL + SHIFT + P -> pin active window (makes it always visible)
